@@ -1,0 +1,29 @@
+#!/usr/bin/expect
+
+if {$argc != 5} {
+  send "Usage: $argv0 <host_name> <ip> <src_file> <dest_file> <passwd>\n"
+  exit
+}
+
+set user_name [lindex $argv 0]
+set ip 	      [lindex $argv 1]
+set src_file  [lindex $argv 2]
+set dest_file [lindex $argv 3]
+set passwd    [lindex $argv 4]
+
+spawn scp $user_name@$ip:$src_file $dest_file
+
+expect { 
+    "*assword:*" { 
+        send "$passwd\r" 
+		exp_continue
+    } 
+    "*es/no)?*" { 
+        send "yes\r" 
+        exp_continue 
+    } 
+    timeout { 
+        puts "connect is timeout" 
+        exit 3 
+    } 
+}
