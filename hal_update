@@ -1,0 +1,45 @@
+#!/bin/bash
+
+#if [ $# != 1 ]
+#then
+	#echo "Usage:$0  <hal|cbm>"
+	#exit
+#fi
+
+module=$1
+usr=root
+#ip=10.238.232.114
+ip=10.238.236.115
+passwd=test0000
+
+update_cbm_lib(){
+        src_lib=/data/liujm/xudong/googlev/chroot/build/poppy/usr/lib64/libcbm.so
+        dest_lib=/usr/lib64/libcbm.so
+	exp_scp $usr $ip $src_lib $dest_lib $passwd
+}
+
+
+update_hal_lib(){
+#	src_lib=/data/liujm/xudong/googlev/chroot/build/poppy/usr/lib64/libcamerahal.so.0.0.0
+#	src_lib=/data/yh/chromeos/googlev/chroot/build/poppy/usr/lib64/libcamerahal.so.0.0.0
+	src_lib=/build/poppy/usr/lib64/libcamerahal.so.0.0.0
+	dest_lib=/usr/lib64/libcamerahal.so.0.0.0
+	./exp_scp l $usr $ip $src_lib $dest_lib $passwd
+}
+
+case $module in
+	cbm)
+		echo update cbm lib
+		update_cbm_lib
+		;;
+	hal)
+		echo update hal lib
+		update_hal_lib
+		;;
+	*)
+		#echo "Invalid module: $module"
+		update_hal_lib
+		exit
+		;;
+esac
+
