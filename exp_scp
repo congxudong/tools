@@ -1,17 +1,32 @@
 #!/usr/bin/expect
 
-if {$argc != 5} {
-  send "Usage: $argv0 <host_name> <ip> <src_file> <dest_file> <passwd>\n"
-  exit
+if {$argc != 6} {
+    send "#################################################################################\n"
+    send "## Usage: $argv0 <r|l> <host_name> <ip> <src_file> <dest_file> <passwd>     ##\n"
+    send "## option r: indicating copy file from remote to local                         ##\n"
+    send "## option l: indicating copy file from local to remote                         ##\n"
+    send "## eg: $argv0 r congxd 10.238.232.115 /usr/lib64/xxx.so /home/congxd 123456 ##\n"
+    send "#################################################################################\n "
+    exit
 }
 
-set user_name [lindex $argv 0]
-set ip 	      [lindex $argv 1]
-set src_file  [lindex $argv 2]
-set dest_file [lindex $argv 3]
-set passwd    [lindex $argv 4]
+set opt       [lindex $argv 0]
+set user_name [lindex $argv 1]
+set ip 	      [lindex $argv 2]
+set src_file  [lindex $argv 3]
+set dest_file [lindex $argv 4]
+set passwd    [lindex $argv 5]
 
-spawn scp $user_name@$ip:$src_file $dest_file
+if { $opt == {r} } {
+    spawn scp $user_name@$ip:$src_file $dest_file
+} elseif { $opt == {l} } {
+	spawn scp $src_file $user_name@$ip:$dest_file
+} else {
+    send "Invalid opt:$opt\n"
+    exit
+}
+
+
 
 expect { 
     "*assword:*" { 
