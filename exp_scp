@@ -12,7 +12,7 @@ if {$argc != 6} {
 
 set opt       [lindex $argv 0]
 set user_name [lindex $argv 1]
-set ip 	      [lindex $argv 2]
+set ip        [lindex $argv 2]
 set src_file  [lindex $argv 3]
 set dest_file [lindex $argv 4]
 set passwd    [lindex $argv 5]
@@ -20,7 +20,7 @@ set passwd    [lindex $argv 5]
 if { $opt == {r} } {
     spawn scp $user_name@$ip:$src_file $dest_file
 } elseif { $opt == {l} } {
-	spawn scp $src_file $user_name@$ip:$dest_file
+    spawn scp $src_file $user_name@$ip:$dest_file
 } else {
     send "Invalid opt:$opt\n"
     exit
