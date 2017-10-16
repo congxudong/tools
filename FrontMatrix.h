@@ -1,6 +1,6 @@
-/*
- *                  sample code
- *
+/*******************************************************************
+ *                  landscape mode
+ *******************************************************************
   void QCamera2HardwareInterface::drawOnFrame(void *frame_buffer,
       int x, int y, int32_t stride, char *show)
   {
@@ -29,6 +29,34 @@
       addr_base += CHAR_WIDTH;
     }
   }
+
+*****************************************************************
+   			Potrait Mode
+****************************************************************
+    int x_new = y;
+    int y_new = scanline - x;
+    base_pos = stride*y_new + x_new;
+    for(i = 0; i < len; i++){
+      ptr = (uint8_t *)frame_buffer;
+      cur_pos = base_pos;
+      shift = show[i] - MATRIX_ASCII_OFFSET;
+      if(shift > MATRIX_CHAR_NUM - 1 || shift < 0)
+        shift = 0;
+      shift = shift * CHAR_LENGTH;
+      for(h = 0; h < CHAR_HEIGHT; h++){
+        value = ((nAsciiDot[shift + h*MATRIX_STRID]<<16))|
+                ((nAsciiDot[shift + h*MATRIX_STRID + 1]<<8))|
+                  nAsciiDot[shift + h*MATRIX_STRID + 2];
+        for(w = 0; w < CHAR_WIDTH; w++){
+          if(cur_pos < 0)
+            continue;
+          ptr[cur_pos] = value&(1 << (CHAR_WIDTH - w)) ? 255 : 0;
+          cur_pos -= stride;
+        }
+        cur_pos = base_pos + h;
+      }
+      base_pos -= stride*CHAR_WIDTH;
+    }
 */
 
 #define CHAR_LENGTH                  144
